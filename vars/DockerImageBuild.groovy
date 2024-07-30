@@ -31,6 +31,7 @@ def call(
         stage('Publish Docker Image') {
             if(!isPublish) {
                 Utils.markStageSkippedForConditional(STAGE_NAME)
+                return
             }
 
             docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
