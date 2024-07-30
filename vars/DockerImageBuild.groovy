@@ -25,7 +25,7 @@ def call(
 
         def image = null;
         stage('Build Docker Image') {
-            image = docker.build("${info.name}:latest", "--file ${file} ${path}")
+            image = docker.build("${info.name}:latest", "--file ${info.file} ${info.path}")
         }
 
         stage('Publish Docker Image') {
