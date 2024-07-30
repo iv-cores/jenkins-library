@@ -18,7 +18,7 @@ def call(
     node {
         checkout scm
 
-        def isPrimary = isPrimary()
+        def isPrimary = isPrimary(this)
         def isPublish = params['publish docker'] ?: isPrimary
         def tags = splitTags(params['publish tags'] as String) ?: defaultTags
 
