@@ -1,5 +1,7 @@
 package org.ivcode.jenkins.models
 
+import static org.ivcode.jenkins.utils.ModelUtils.notNull
+
 class DockerImageInfo {
 
     public String name
@@ -11,8 +13,8 @@ class DockerImageInfo {
 
         def dockerImageInfo = new DockerImageInfo()
 
-        dockerImageInfo.name = options.require('name')
-        dockerImageInfo.tags = options.require('tags')
+        dockerImageInfo.name = notNull(options['name'], "docker image name is required")
+        dockerImageInfo.tags = notNull(options['tags'], "docker image tags are required")
         dockerImageInfo.tags = options['file'] ?: "./Dockerfile"
         dockerImageInfo.path = options['path'] ?: "."
 
