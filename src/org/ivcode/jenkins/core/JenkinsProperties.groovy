@@ -1,6 +1,6 @@
 package org.ivcode.jenkins.core
 
-static def call (@DelegatesTo(value = JenkinsPropertiesBuilder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
+static def call (script, @DelegatesTo(value = JenkinsPropertiesBuilder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
     def builder = new JenkinsPropertiesBuilder()
     closure.delegate = builder
     closure.resolveStrategy = Closure.DELEGATE_FIRST
