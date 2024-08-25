@@ -14,14 +14,13 @@ def call(
 ) {
     node {
         checkout scm
-
         def info = DockerImageInfo.fromOptions(options)
-        def isPrimary = isPrimary(this)
 
+        // Create the Jenkins Properties
         def properties = JenkinsProperties.create(this) {
             withBoolean(
                 name: 'publish docker',
-                defaultValue: isPrimary,
+                defaultValue: isPrimary(this),
                 description: 'publish to the docker repository'
             )
 
@@ -36,6 +35,7 @@ def call(
         def tags = properties.getStringArray('publish tags')
 
 
+        // Create the Jenkins Stages
         new JenkinsStages(this).apply {
             def image = null;
 
