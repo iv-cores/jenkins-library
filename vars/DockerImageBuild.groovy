@@ -1,27 +1,40 @@
 import org.ivcode.jenkins.models.DockerImageInfo
+
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 import static org.ivcode.jenkins.utils.ScmUtils.isPrimary
+import org.ivcode.jenkins.core.JenkinsProperties
 
+/**
+ * Builds and optionally publishes a Docker image based on the provided options.
+ *
+ * @param options A map containing the options for the Docker image build and publish.
+ */
 def call(
     Map<String, Object> options = [:]
 ) {
-
     node {
         checkout scm
 
         def info = DockerImageInfo.fromOptions(options)
         def isPrimary = isPrimary(this)
 
-        properties([
-                parameters([
-                        booleanParam(name: 'publish docker', defaultValue: isPrimary, description: 'publish to the docker repository'),
-                        string(name: 'publish tags', defaultValue: "${info.tags.join(',')}", description: 'comma seperated list of tags to publish')
-                ])
-        ])
+        def properties = JenkinsProperties.create(this) {
+            withBoolean(
+                name: 'publish docker',
+                defaultValue: isPrimary,
+                description: 'publish to the docker repository'
+            )
 
-        def isPublish = params['publish docker'] ?: isPrimary
-        def tags = splitTags(params['publish tags'] as String) ?: info.tags
+            withStringArray(
+                name: 'publish tags',
+                defaultValue: info.tags,
+                description: 'comma separated list of tags to publish'
+            )
+        }
+
+        def isPublish = properties.getBoolean('publish docker')
+        def tags = properties.getStringArray('publish tags')
 
         def image = null;
         stage('Build Docker Image') {
@@ -42,11 +55,4 @@ def call(
         }
     }
 
-}
-
-private static def splitTags(String tags) {
-    if(tags == null || tags.trim().isEmpty()) {
-        return null
-    }
-    return tags.split(',').collect { it.trim() }
 }

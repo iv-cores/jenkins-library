@@ -1,0 +1,25 @@
+apply plugin: 'groovy'
+
+repositories {
+    mavenCentral()
+    maven {url 'https://repo.jenkins-ci.org/releases/'}
+    maven {url 'https://repo.jenkins-ci.org/public/'}
+}
+
+sourceSets {
+    main {
+        groovy { srcDirs = ['vars', 'src'] }
+    }
+    test {
+        groovy { srcDirs = ['test'] }
+    }
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy-all:4.0.22'
+
+
+    implementation 'org.jenkins-ci.main:jenkins-core:2+@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-basic-steps:2+@jar'
+    implementation 'org.jenkinsci.plugins:pipeline-model-definition:2+@jar'
+}
