@@ -1,9 +1,5 @@
 package org.ivcode.jenkins.core
 
-import hudson.model.ParametersDefinitionProperty
-import hudson.model.BooleanParameterDefinition
-import hudson.model.StringParameterDefinition
-
 class JenkinsProperties {
 
     private final def node
@@ -28,6 +24,8 @@ class JenkinsProperties {
                 properties.add(node.booleanParam(name: property.name, defaultValue: property.defaultValue, description: property.description))
             } else if(property.type == JenkinsPropertiesType.STRING) {
                 properties.add(node.string(name: property.name, defaultValue: property.defaultValue, description: property.description))
+            } else {
+                throw new IllegalArgumentException("unknown property type: ${property.type}")
             }
         }
 
