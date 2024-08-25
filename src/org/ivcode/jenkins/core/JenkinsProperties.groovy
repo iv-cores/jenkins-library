@@ -1,11 +1,13 @@
 package org.ivcode.jenkins.core
 
+import jenkins.model.Jenkins
+
 
 class JenkinsProperties {
 
     Map<String, JenkinsProperty> buildProperties = [:]
 
-    def static create(Node node, @DelegatesTo(value = Builder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
+    def static create(Jenkins node, @DelegatesTo(value = Builder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
         def builder = new Builder(node)
         closure.delegate = builder
         closure.resolveStrategy = Closure.DELEGATE_FIRST
@@ -14,7 +16,7 @@ class JenkinsProperties {
         return new JenkinsProperties(node, builder)
     }
 
-    private JenkinsProperties(Node node, Builder builder) {
+    private JenkinsProperties(Jenkins node, Builder builder) {
         def properties = []
 
         builder.build().each { property ->
@@ -37,10 +39,10 @@ class JenkinsProperties {
     }
 
     static class Builder {
-        private final Node node
+        private final Jenkins node
         private final List<JenkinsProperty> buildProperties = new ArrayList<>()
 
-        Builder(Node node) {
+        Builder(Jenkins node) {
             this.node = node
         }
 
