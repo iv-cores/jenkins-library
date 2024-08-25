@@ -73,7 +73,7 @@ def call(
                             }
                         }
 
-                        if(!isSnapshot(gradleInf.version as String)) {
+                        if(!isSnapshot(gradleInfo.version as String)) {
                             throw new UnsupportedOperationException("release process not yet defined")
                         }
                     }
