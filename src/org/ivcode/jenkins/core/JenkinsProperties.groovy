@@ -32,7 +32,7 @@ class JenkinsProperties {
     }
 
     Boolean getBoolean(String name) {
-        return get(name) as Boolean
+        return get(name)?.toBoolean()
     }
 
     String get(String name) {
