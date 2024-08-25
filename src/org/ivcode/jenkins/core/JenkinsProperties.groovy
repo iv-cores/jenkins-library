@@ -20,7 +20,7 @@ class JenkinsProperties {
         this.buildProperties = new HashMap<>(buildProperties)
 
         def properties = []
-        this.buildProperties.each { property ->
+        this.buildProperties.each { name, property ->
             if(property.type == JenkinsPropertiesType.BOOLEAN) {
                 properties.add(node.booleanParam(name: property.name, defaultValue: property.defaultValue, description: property.description))
             } else if(property.type == JenkinsPropertiesType.STRING) {
