@@ -2,11 +2,10 @@ package org.ivcode.jenkins.core
 
 class JenkinsPropertiesBuilder {
 
-    private final List<JenkinsProperty> properties = new ArrayList<>()
+    private final List<JenkinsProperty> buildProperties = new ArrayList<>()
 
-    
     def with(JenkinsPropertiesType type, String name, String defaultValue, String description) {
-        properties.add(new JenkinsProperty(type, name, defaultValue, description))
+        this.buildProperties.add(new JenkinsProperty(type, name, defaultValue, description))
         return this
     }
 
@@ -27,7 +26,7 @@ class JenkinsPropertiesBuilder {
     }
 
     List<JenkinsProperty> build() {
-        return new ArrayList<>(properties)
+        return new ArrayList<>(this.buildProperties)
     }
 }
 
