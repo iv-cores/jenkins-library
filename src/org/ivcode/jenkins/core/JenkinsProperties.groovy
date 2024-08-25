@@ -32,7 +32,7 @@ class JenkinsProperties {
             }
         }
 
-        node.addProperty(new ParametersDefinitionProperty(properties))
+        Jenkins.get().getGlobalNodeProperties().add(new ParametersDefinitionProperty(properties))
     }
 
     Boolean getBoolean(String name) {
