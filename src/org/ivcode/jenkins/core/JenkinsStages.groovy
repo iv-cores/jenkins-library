@@ -20,11 +20,13 @@ class JenkinsStages {
     }
 
     void create(String name, Boolean condition, Closure closure) {
-        if(!condition) {
-            Utils.markStageSkippedForConditional(name)
-            return
-        }
+        node.stage(name) {
+            if(!condition) {
+                Utils.markStageSkippedForConditional(name)
+                return
+            }
 
-        node.stage(name, closure)
+            closure()
+        }
     }
 }
