@@ -1,8 +1,8 @@
 import org.ivcode.jenkins.core.JenkinsStages
 import org.ivcode.jenkins.models.DockerImageInfo
+import org.ivcode.jenkins.core.JenkinsProperties
 
 import static org.ivcode.jenkins.utils.ScmUtils.isPrimary
-import org.ivcode.jenkins.core.JenkinsProperties
 
 /**
  * Builds and optionally publishes a Docker image based on the provided options.
@@ -36,7 +36,7 @@ def call(
         def tags = properties.getStringArray('publish tags')
 
 
-        new JenkinsStages(this).with {
+        new JenkinsStages(this).apply {
             def image = null;
 
             create('Build Docker Image') {
