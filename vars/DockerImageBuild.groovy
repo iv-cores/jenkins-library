@@ -1,6 +1,5 @@
+import org.ivcode.jenkins.core.JenkinsStages
 import org.ivcode.jenkins.models.DockerImageInfo
-
-import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 import static org.ivcode.jenkins.utils.ScmUtils.isPrimary
 import org.ivcode.jenkins.core.JenkinsProperties
@@ -36,20 +35,19 @@ def call(
         def isPublish = properties.getBoolean('publish docker')
         def tags = properties.getStringArray('publish tags')
 
-        def image = null;
-        stage('Build Docker Image') {
-            image = docker.build("${info.name}:latest", "--file ${info.file} ${info.path}")
-        }
 
-        stage('Publish Docker Image') {
-            if(!isPublish) {
-                Utils.markStageSkippedForConditional(STAGE_NAME)
-                return
+        new JenkinsStages(this).with {
+            def image = null;
+
+            create('Build Docker Image') {
+                image = docker.build("${info.name}:latest", "--file ${info.file} ${info.path}")
             }
 
-            docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
-                tags.each { tag ->
-                    image.push(tag)
+            create('Publish Docker Image', isPublish) {
+                docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
+                    tags.each { tag ->
+                        image.push(tag)
+                    }
                 }
             }
         }
