@@ -24,7 +24,7 @@ class DockerImageInfo {
         def dockerImageInfo = new DockerImageInfo()
 
         dockerImageInfo.name = notNull(options['name'], "docker image name is required")
-        dockerImageInfo.tags = notNull(options['tags'], "docker image tags are required")
+        dockerImageInfo.tags = notNull(options['tags'] as List<String>, "docker image tags are required")
         dockerImageInfo.file = options['file'] ?: "./Dockerfile"
         dockerImageInfo.path = options['path'] ?: "."
 
