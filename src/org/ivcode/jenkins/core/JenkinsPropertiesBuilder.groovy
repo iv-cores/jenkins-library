@@ -4,6 +4,7 @@ class JenkinsPropertiesBuilder {
 
     private final List<JenkinsProperty> properties = new ArrayList<>()
 
+    
     def with(JenkinsPropertiesType type, String name, String defaultValue, String description) {
         properties.add(new JenkinsProperty(type, name, defaultValue, description))
         return this
