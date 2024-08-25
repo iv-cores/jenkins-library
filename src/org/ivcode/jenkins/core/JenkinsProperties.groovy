@@ -3,6 +3,7 @@ package org.ivcode.jenkins.core
 import hudson.model.ParametersDefinitionProperty
 import hudson.model.BooleanParameterDefinition
 import hudson.model.StringParameterDefinition
+import jenkins.model.Jenkins
 
 class JenkinsProperties {
 
@@ -18,7 +19,7 @@ class JenkinsProperties {
         return builder.build()
     }
 
-    private JenkinsProperties(node, Map<String, JenkinsProperty> buildProperties) {
+    private JenkinsProperties(Jenkins node, Map<String, JenkinsProperty> buildProperties) {
         this.node = node
         this.buildProperties = new HashMap<>(buildProperties)
 
@@ -31,7 +32,7 @@ class JenkinsProperties {
             }
         }
 
-        node.addProperty(new ParametersDefinitionProperty(properties))
+        node.properties([node.parameters(properties)])
     }
 
     Boolean getBoolean(String name) {
