@@ -3,7 +3,7 @@ import org.ivcode.jenkins.models.DockerImageInfo
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 
 import static org.ivcode.jenkins.utils.ScmUtils.isPrimary
-import static org.ivcode.jenkins.core.JenkinsProperties.call as JenkinsProperties
+import org.ivcode.jenkins.core.JenkinsProperties
 
 def call(
     Map<String, Object> options = [:]
@@ -14,7 +14,7 @@ def call(
         def info = DockerImageInfo.fromOptions(options)
         def isPrimary = isPrimary(this)
 
-        JenkinsProperties(this) {
+        JenkinsProperties.create(this as Node) {
             withBoolean(
                 name: 'publish docker',
                 defaultValue: isPrimary,
@@ -23,7 +23,7 @@ def call(
 
             withString(
                 name: 'publish tags',
-                defaultValue: 'latest, stable',
+                defaultValue: info.tags.join(','),
                 description: 'comma separated list of tags to publish'
             )
         }
