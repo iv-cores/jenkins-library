@@ -3,6 +3,7 @@ import org.ivcode.jenkins.models.DockerImageInfo
 import org.ivcode.jenkins.core.JenkinsProperties
 
 import static org.ivcode.jenkins.utils.ScmUtils.isPrimary
+import static org.ivcode.jenkins.utils.ModelUtils.notNull
 
 /**
  * Builds and optionally publishes a Docker image based on the provided options.
@@ -31,26 +32,22 @@ def call(
             )
         }
 
-        def isPublish = properties.getBoolean('publish docker')
-        def tags = properties.getStringArray('publish tags')
-
 
         // Create the Jenkins Stages
         new JenkinsStages(this).apply {
-            def image = null;
+            def image
 
             create('Build Docker Image') {
                 image = docker.build("${info.name}:latest", "--file ${info.file} ${info.path}")
             }
 
+            def isPublish = notNull properties.getBoolean('publish docker')
             create('Publish Docker Image', isPublish) {
                 docker.withRegistry(env.DOCKER_URI_SNAPSHOT, 'docker-snapshot') {
-                    tags.each { tag ->
-                        image.push(tag)
-                    }
+                    def tags = notNull properties.getStringArray('publish tags')
+                    tags.each { image.push(it) }
                 }
             }
         }
     }
-
 }
