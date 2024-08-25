@@ -2,6 +2,9 @@ package org.ivcode.jenkins.models
 
 import static org.ivcode.jenkins.utils.ModelUtils.notNull
 
+/**
+ * Class representing Docker image information.
+ */
 class DockerImageInfo {
 
     public String name
@@ -9,6 +12,13 @@ class DockerImageInfo {
     public String file
     public String path
 
+    /**
+     * Creates a DockerImageInfo instance from a map of options.
+     *
+     * @param options A map containing the options for the Docker image.
+     * @return A DockerImageInfo instance populated with the provided options.
+     * @throws IllegalArgumentException if the required options are not provided.
+     */
     static DockerImageInfo fromOptions(Map<String, Object> options) {
 
         def dockerImageInfo = new DockerImageInfo()

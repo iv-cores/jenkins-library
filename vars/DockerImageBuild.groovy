@@ -5,6 +5,11 @@ import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
 import static org.ivcode.jenkins.utils.ScmUtils.isPrimary
 import org.ivcode.jenkins.core.JenkinsProperties
 
+/**
+ * Builds and optionally publishes a Docker image based on the provided options.
+ *
+ * @param options A map containing the options for the Docker image build and publish.
+ */
 def call(
     Map<String, Object> options = [:]
 ) {
