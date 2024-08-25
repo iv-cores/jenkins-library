@@ -7,7 +7,7 @@ class JenkinsProperties {
 
     Map<String, JenkinsProperty> buildProperties = [:]
 
-    def static create(Jenkins node, @DelegatesTo(value = Builder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
+    def static create(node, @DelegatesTo(value = Builder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
         def builder = new Builder(node)
         closure.delegate = builder
         closure.resolveStrategy = Closure.DELEGATE_FIRST
@@ -16,7 +16,7 @@ class JenkinsProperties {
         return new JenkinsProperties(node, builder)
     }
 
-    private JenkinsProperties(Jenkins node, Builder builder) {
+    private JenkinsProperties(node, Builder builder) {
         def properties = []
 
         builder.build().each { property ->
@@ -39,10 +39,10 @@ class JenkinsProperties {
     }
 
     static class Builder {
-        private final Jenkins node
+        private final def node
         private final List<JenkinsProperty> buildProperties = new ArrayList<>()
 
-        Builder(Jenkins node) {
+        Builder(node) {
             this.node = node
         }
 

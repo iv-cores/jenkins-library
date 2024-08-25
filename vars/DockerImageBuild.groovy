@@ -15,7 +15,7 @@ def call(
         def info = DockerImageInfo.fromOptions(options)
         def isPrimary = isPrimary(this)
 
-        JenkinsProperties.create(this as Jenkins) {
+        JenkinsProperties.create(this) {
             withBoolean(
                 name: 'publish docker',
                 defaultValue: isPrimary,
