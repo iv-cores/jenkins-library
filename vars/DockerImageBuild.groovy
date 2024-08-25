@@ -1,3 +1,4 @@
+import jenkins.model.Jenkins
 import org.ivcode.jenkins.models.DockerImageInfo
 
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
@@ -14,7 +15,7 @@ def call(
         def info = DockerImageInfo.fromOptions(options)
         def isPrimary = isPrimary(this)
 
-        def properties = JenkinsProperties.create(this) {
+        def properties = JenkinsProperties.create(this as Jenkins) {
             withBoolean(
                 name: 'publish docker',
                 defaultValue: isPrimary,
