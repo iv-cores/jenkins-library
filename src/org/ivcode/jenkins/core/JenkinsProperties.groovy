@@ -6,7 +6,7 @@ static def call (script, @DelegatesTo(value = JenkinsPropertiesBuilder, strategy
     closure.resolveStrategy = Closure.DELEGATE_FIRST
     closure()
 
-    register(this, builder)
+    register(script, builder)
 }
 
 static def register(script, JenkinsPropertiesBuilder builder) {
