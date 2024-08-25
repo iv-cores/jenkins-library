@@ -1,5 +1,8 @@
 package org.ivcode.jenkins.core
 
+import hudson.model.ParametersDefinitionProperty
+import hudson.model.BooleanParameterDefinition
+import hudson.model.StringParameterDefinition
 
 class JenkinsProperties {
 
@@ -21,14 +24,14 @@ class JenkinsProperties {
 
         def properties = []
         this.buildProperties.each { name, property ->
-            if(property.type == JenkinsPropertiesType.BOOLEAN) {
-                properties.add(node.booleanParam(name: property.name, defaultValue: property.defaultValue, description: property.description))
-            } else if(property.type == JenkinsPropertiesType.STRING) {
-                properties.add(node.string(name: property.name, defaultValue: property.defaultValue, description: property.description))
+            if (property.type == JenkinsPropertiesType.BOOLEAN) {
+                properties.add(new BooleanParameterDefinition(property.name, property.defaultValue.toBoolean(), property.description))
+            } else if (property.type == JenkinsPropertiesType.STRING) {
+                properties.add(new StringParameterDefinition(property.name, property.defaultValue, property.description))
             }
         }
 
-        node.properties([node.parameters(properties)])
+        node.addProperty(new ParametersDefinitionProperty(properties))
     }
 
     Boolean getBoolean(String name) {
