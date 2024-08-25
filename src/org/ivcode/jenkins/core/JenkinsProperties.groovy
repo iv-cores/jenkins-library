@@ -3,7 +3,8 @@ package org.ivcode.jenkins.core
 
 class JenkinsProperties {
 
-    Map<String, JenkinsProperty> buildProperties = [:]
+    private final def node
+    private final Map<String, JenkinsProperty> buildProperties
 
     static JenkinsProperties create(node, @DelegatesTo(value = Builder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
         def builder = new Builder(node)
@@ -14,10 +15,12 @@ class JenkinsProperties {
         return builder.build()
     }
 
-    private JenkinsProperties(node, List<JenkinsProperty> buildProperties) {
-        def properties = []
+    private JenkinsProperties(node, Map<String, JenkinsProperty> buildProperties) {
+        this.node = node
+        this.buildProperties = new HashMap<>(buildProperties)
 
-        buildProperties.each { property ->
+        def properties = []
+        this.buildProperties.each { property ->
             if(property.type == JenkinsPropertiesType.BOOLEAN) {
                 properties.add(node.booleanParam(name: property.name, defaultValue: property.defaultValue, description: property.description))
             } else if(property.type == JenkinsPropertiesType.STRING) {
@@ -29,32 +32,32 @@ class JenkinsProperties {
     }
 
     Boolean getBoolean(String name) {
-        return buildProperties[name]?.defaultValue
+        return get(name) as Boolean
     }
 
     String get(String name) {
-        return buildProperties[name]?.defaultValue
+        return node.params[name] ?: buildProperties[name]?.defaultValue
     }
 
     static class Builder {
         private final def node
-        private final List<JenkinsProperty> buildProperties = new ArrayList<>()
+        private final Map<String, JenkinsProperty> buildProperties = [:]
 
         Builder(node) {
             this.node = node
         }
 
         def with(JenkinsPropertiesType type, String name, String defaultValue, String description) {
-            this.buildProperties.add(new JenkinsProperty(type, name, defaultValue, description))
+            this.buildProperties[name] = new JenkinsProperty(type, name, defaultValue, description)
             return this
         }
 
-        def withBoolean(String name, String defaultValue, String description) {
-            return with(JenkinsPropertiesType.BOOLEAN, name, defaultValue, description)
+        def withBoolean(String name, Boolean defaultValue, String description) {
+            return with(JenkinsPropertiesType.BOOLEAN, name, defaultValue?.toString(), description)
         }
 
         def withBoolean(Map params) {
-            return with(JenkinsPropertiesType.BOOLEAN, params.name as String, params.defaultValue as String, params.description as String)
+            return withBoolean(params.name as String, params.defaultValue as Boolean, params.description as String)
         }
 
         def withString(String name, String defaultValue, String description) {
@@ -62,7 +65,7 @@ class JenkinsProperties {
         }
 
         def withString(Map params) {
-            return with(JenkinsPropertiesType.STRING, params.name as String, params.defaultValue as String, params.description as String)
+            return withString(params.name as String, params.defaultValue as String, params.description as String)
         }
 
         JenkinsProperties build() {

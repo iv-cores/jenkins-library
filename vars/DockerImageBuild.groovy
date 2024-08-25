@@ -14,7 +14,7 @@ def call(
         def info = DockerImageInfo.fromOptions(options)
         def isPrimary = isPrimary(this)
 
-        JenkinsProperties.create(this) {
+        def properties = JenkinsProperties.create(this) {
             withBoolean(
                 name: 'publish docker',
                 defaultValue: isPrimary,
@@ -28,8 +28,8 @@ def call(
             )
         }
 
-        def isPublish = params['publish docker'] ?: isPrimary
-        def tags = splitTags(params['publish tags'] as String) ?: info.tags
+        def isPublish = properties.getBoolean('publish docker')
+        def tags = splitTags(properties.get('publish tags'))
 
         def image = null;
         stage('Build Docker Image') {
