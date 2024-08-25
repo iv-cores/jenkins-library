@@ -40,6 +40,10 @@ class JenkinsProperties {
         return node.params[name] ?: buildProperties[name]?.defaultValue
     }
 
+    List<String> getStringArray(String name) {
+        return get(name)?.split(',')?.collect { it.trim() }
+    }
+
     static class Builder {
         private final def node
         private final Map<String, JenkinsProperty> buildProperties = [:]
@@ -67,6 +71,14 @@ class JenkinsProperties {
 
         def withString(Map params) {
             return withString(params.name as String, params.defaultValue as String, params.description as String)
+        }
+
+        def withStringArray(String name, List<String> defaultValue, String description) {
+            return with(JenkinsPropertiesType.STRING, name, defaultValue.join(', '), description)
+        }
+
+        def withStringArray(Map params) {
+            return withStringArray(params.name as String, params.defaultValue as List<String>, params.description as String)
         }
 
         JenkinsProperties build() {

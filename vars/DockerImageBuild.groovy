@@ -21,15 +21,15 @@ def call(
                 description: 'publish to the docker repository'
             )
 
-            withString(
+            withStringArray(
                 name: 'publish tags',
-                defaultValue: info.tags.join(','),
+                defaultValue: info.tags,
                 description: 'comma separated list of tags to publish'
             )
         }
 
         def isPublish = properties.getBoolean('publish docker')
-        def tags = splitTags(properties.get('publish tags'))
+        def tags = properties.getStringArray('publish tags')
 
         def image = null;
         stage('Build Docker Image') {
@@ -50,17 +50,4 @@ def call(
         }
     }
 
-}
-
-/**
- * Splits a comma separated string of tags into a list of strings.
- *
- * @param tags a comma separated string of tags
- * @return a list of tags or null if the input is null or empty
- */
-private static def splitTags(String tags) {
-    if(tags == null || tags.trim().isEmpty()) {
-        return null
-    }
-    return tags.split(',').collect { it.trim() }
 }
