@@ -14,10 +14,10 @@ class JenkinsProperties {
         return builder.build()
     }
 
-    private JenkinsProperties(node, List<JenkinsProperty> jenkinsPropertyList) {
+    private JenkinsProperties(node, List<JenkinsProperty> buildProperties) {
         def properties = []
 
-        jenkinsPropertyList.each { property ->
+        buildProperties.each { property ->
             if(property.type == JenkinsPropertiesType.BOOLEAN) {
                 properties.add(node.booleanParam(name: property.name, defaultValue: property.defaultValue, description: property.description))
             } else if(property.type == JenkinsPropertiesType.STRING) {
@@ -66,7 +66,7 @@ class JenkinsProperties {
         }
 
         JenkinsProperties build() {
-            return new JenkinsProperties(node, this)
+            return new JenkinsProperties(node, buildProperties)
         }
     }
 
