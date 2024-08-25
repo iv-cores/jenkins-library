@@ -1,19 +1,17 @@
 package org.ivcode.jenkins.core
 
-import jenkins.model.Jenkins
-
 
 class JenkinsProperties {
 
     Map<String, JenkinsProperty> buildProperties = [:]
 
-    def static create(node, @DelegatesTo(value = Builder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
+    static JenkinsProperties create(node, @DelegatesTo(value = Builder, strategy = Closure.DELEGATE_FIRST) Closure closure) {
         def builder = new Builder(node)
         closure.delegate = builder
         closure.resolveStrategy = Closure.DELEGATE_FIRST
         closure()
 
-        return new JenkinsProperties(node, builder)
+        return builder.build()
     }
 
     private JenkinsProperties(node, Builder builder) {
@@ -67,8 +65,8 @@ class JenkinsProperties {
             return with(JenkinsPropertiesType.STRING, params.name as String, params.defaultValue as String, params.description as String)
         }
 
-        JenkinsProperty build() {
-            return new JenkinsProperty(node, this)
+        JenkinsProperties build() {
+            return new JenkinsProperties(node, this)
         }
     }
 

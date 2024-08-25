@@ -1,4 +1,3 @@
-import jenkins.model.Jenkins
 import org.ivcode.jenkins.models.DockerImageInfo
 
 import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
