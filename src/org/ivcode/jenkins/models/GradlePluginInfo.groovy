@@ -1,5 +1,7 @@
 package org.ivcode.jenkins.models
 
+import static org.ivcode.jenkins.utils.ModelUtils.notNull
+
 class GradlePluginInfo {
     /* Docker image to use for building the plugin */
     public String buildImage = 'registry.ivcode.org/corretto-ubuntu:21-jammy'
