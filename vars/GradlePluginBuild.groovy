@@ -20,6 +20,11 @@ def call(
         // Create the Jenkins Properties
         def properties = JenkinsProperties.create(this) {
             withBoolean(
+                name: 'sonar',
+                defaultValue: isPrimary(this),
+                description: 'run sonarqube analysis'
+            )
+            withBoolean(
                 name: 'publish maven',
                 defaultValue: isPrimary(this),
                 description: 'publish to the maven repository'
@@ -44,6 +49,11 @@ def call(
 
                 create('Build') {
                     sh './gradlew clean build'
+                }
+
+                def isSonar = notNull properties.getBoolean('sonar')
+                create("SonarQube", isSonar) {
+                    sh "./gradlew sonar"
                 }
 
                 def isPublish = notNull properties.getBoolean('publish maven')
