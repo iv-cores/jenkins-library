@@ -11,12 +11,6 @@ def call(
     node {
         checkout scm
 
-        env.each { key, value ->
-            echo "${key} = ${value}"
-        }
-        
-        sh 'env'
-
         // Build info from the given options
         def info = GradlePluginInfo.fromOptions(options)
 
@@ -59,10 +53,14 @@ def call(
 
                 def isSonar = notNull properties.getBoolean('sonar')
                 create("SonarQube", isSonar) {
+                    def gitCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    def gitUrl = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
+
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
                         sh './gradlew sonar ' +
-                                '-D"sonar.scm.revision=$GIT_COMMIT" ' +
-                                '-D"sonar.scm.url=$GIT_URL" '
+                                "-D\"sonar.scm.revision=${gitCommit}\" " +
+                                "-D\"sonar.links.scm=${gitUrl}\" " +
+                                '-D"sonar.links.ci=${JOB_URL}"'
                     }
                 }
 
