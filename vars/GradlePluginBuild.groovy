@@ -11,7 +11,10 @@ def call(
     node {
         checkout scm
 
-        println "${env}"
+        env.each { key, value ->
+            echo "${key} = ${value}"
+        }
+        
         sh 'env'
 
         // Build info from the given options
