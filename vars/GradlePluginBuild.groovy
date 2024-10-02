@@ -54,9 +54,9 @@ def call(
                 def isSonar = notNull properties.getBoolean('sonar')
                 create("SonarQube", isSonar) {
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
-                        sh "./gradlew sonar " +
-                                "-D\"sonar.scm.revision=${env.GIT_COMMIT}\" " +
-                                "-D\"sonar.scm.url=${env.GIT_URL}\" "
+                        sh './gradlew sonar ' +
+                                '-D"sonar.scm.revision=$GIT_COMMIT" ' +
+                                '-D"sonar.scm.url=$GIT_URL" '
                     }
                 }
 
