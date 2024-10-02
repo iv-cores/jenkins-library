@@ -9,7 +9,7 @@ def call(
     Map<String, Object> options = [:]
 ) {
     node {
-        checkout scm
+        def scmVars = checkout scm
 
         // Build info from the given options
         def info = GradlePluginInfo.fromOptions(options)
@@ -53,13 +53,10 @@ def call(
 
                 def isSonar = notNull properties.getBoolean('sonar')
                 create("SonarQube", isSonar) {
-                    def gitCommit = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    def gitUrl = sh(script: 'git config --get remote.origin.url', returnStdout: true).trim()
-
                     withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
                         sh './gradlew sonar ' +
-                                "-D\"sonar.scm.revision=${gitCommit}\" " +
-                                "-D\"sonar.links.scm=${gitUrl}\" " +
+                                "-D\"sonar.scm.revision=${scmVars.GIT_COMMIT}\" " +
+                                "-D\"sonar.links.scm=${scmVars.GIT_URL}\" " +
                                 '-D"sonar.links.ci=${JOB_URL}"'
                     }
                 }
