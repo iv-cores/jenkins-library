@@ -53,9 +53,11 @@ def call(
 
                 def isSonar = notNull properties.getBoolean('sonar')
                 create("SonarQube", isSonar) {
-                    sh "./gradlew sonar " +
-                            "-D\"sonar.scm.revision=${GIT_COMMIT}\" " +
-                            "-D\"sonar.scm.url=${GIT_URL}\" "
+                    withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_LOGIN')]) {
+                        sh "./gradlew sonar " +
+                                "-D\"sonar.scm.revision=${GIT_COMMIT}\" " +
+                                "-D\"sonar.scm.url=${GIT_URL}\" "
+                    }
                 }
 
                 def isPublish = notNull properties.getBoolean('publish maven')
