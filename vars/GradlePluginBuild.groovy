@@ -11,6 +11,9 @@ def call(
     node {
         checkout scm
 
+        println "${env}"
+        sh 'env'
+
         // Build info from the given options
         def info = GradlePluginInfo.fromOptions(options)
 
