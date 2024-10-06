@@ -59,7 +59,7 @@ def call(
                                 "-D\"sonar.links.scm=${scmVars.GIT_URL}\" " +
                                 '-D"sonar.links.ci=${JOB_URL}"' +
                                 "-D\"sonar.pullrequest.key=${scmVars.GIT_COMMIT}\" " +
-                                "-D\"sonar.pullrequest.branch=${scmVars.GIT_LOCAL_BRANCH}\" " +
+                                "-D\"sonar.pullrequest.branch=${scmVars.GIT_LOCAL_BRANCH}\" "
 
                     }
                 }
